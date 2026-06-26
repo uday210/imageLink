@@ -1,0 +1,19 @@
+{
+  "name": "imagelink",
+  "version": "1.0.0",
+  "description": "Educational canary-token / tracking-pixel demo. Shows how much any link or image reveals about whoever opens it. For authorized teaching and lab use only.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}

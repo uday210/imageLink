@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(git -C /Users/udaykiranbussa/Desktop/MyPersonalGithub/imageLink status)",
+      "Bash(git -c user.name=uday210 -c user.email=uday.sfdc1991@gmail.com commit -q -m 'imageLink: educational tracking-link/pixel demo *)"
+    ]
+  }
+}
