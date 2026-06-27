@@ -89,39 +89,13 @@ app.get('/', (req, res) => {
   </div>
 
   <section class="card">
-    <h2>Create a tracking link</h2>
-    <label>Label (for your reference)
-      <input id="label" placeholder="e.g. phishing-awareness demo" />
-    </label>
-    <label>Destination image URL (what the visitor actually sees)
-      <input id="target" placeholder="https://example.com/cat.jpg" />
-    </label>
-    <button id="create">Generate</button>
-    <div id="out"></div>
+    <h2>How it works</h2>
+    <p class="sub">You create a tracking link from the dashboard, share it, and the dashboard shows
+    every visit it captured (IP, approximate location, device, browser). The same mechanism powers
+    email "read receipts" and web bugs.</p>
+    <p class="foot"><a href="/dashboard">→ Open the dashboard</a> to create links and view captured visits.</p>
   </section>
-
-  <p class="foot"><a href="/dashboard">→ Open dashboard</a> to view captured visits.</p>
 </main>
-<script>
-const $ = (s) => document.querySelector(s);
-$('#create').onclick = async () => {
-  const targetUrl = $('#target').value.trim();
-  if (!targetUrl) { alert('Enter a destination image URL'); return; }
-  const r = await fetch('/api/tokens', {
-    method: 'POST', headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ label: $('#label').value.trim(), targetUrl })
-  });
-  const d = await r.json();
-  if (d.error) { $('#out').textContent = d.error; return; }
-  const link = location.origin + '/i/' + d.id;
-  const pixel = location.origin + '/p/' + d.id + '.png';
-  $('#out').innerHTML =
-    '<div class="result"><p><strong>Share link</strong> (opens the image, logs the visit):</p>'
-    + '<code>' + link + '</code>'
-    + '<p><strong>Tracking pixel</strong> (embed in a page/email/markdown):</p>'
-    + '<code>&lt;img src="' + pixel + '"&gt;</code></div>';
-};
-</script>
 </body></html>`);
 });
 
@@ -217,13 +191,41 @@ app.get('/dashboard', requireAdmin, (req, res) => {
 <title>imageLink — dashboard</title><style>${CSS}${DASH_CSS}</style></head><body>
 <main class="wrap" style="max-width:1100px">
   <h1>📊 Dashboard</h1>
-  <p class="sub">Educational use only. <a href="/">← create a link</a></p>
+  <p class="sub">Educational use only. <a href="/">← home</a></p>
+
+  <section class="card">
+    <h2>Create a tracking link</h2>
+    <label>Label (for your reference)
+      <input id="label" placeholder="e.g. phishing-awareness demo" />
+    </label>
+    <label>Destination image URL (what the visitor actually sees)
+      <input id="target" placeholder="https://cataas.com/cat" />
+    </label>
+    <button id="create">Generate</button>
+    <div id="out"></div>
+  </section>
+
   <div id="tokens">Loading…</div>
 </main>
 <script>
 const KEY=${JSON.stringify(key)};
 const q=(k)=>KEY?('?key='+encodeURIComponent(KEY)):'';
 const esc=(s)=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.getElementById('create').onclick=async()=>{
+  const targetUrl=document.getElementById('target').value.trim();
+  if(!targetUrl){alert('Enter a destination image URL');return;}
+  const r=await fetch('/api/tokens'+q(),{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({label:document.getElementById('label').value.trim(),targetUrl})});
+  const d=await r.json();
+  const out=document.getElementById('out');
+  if(d.error){out.textContent=d.error;return;}
+  const link=location.origin+'/i/'+d.id, pixel=location.origin+'/p/'+d.id+'.png';
+  out.innerHTML='<div class="result"><p><strong>Share link</strong> (opens the image, logs the visit):</p>'
+    +'<code>'+esc(link)+'</code><p><strong>Tracking pixel</strong> (embed in a page/email):</p>'
+    +'<code>&lt;img src="'+esc(pixel)+'"&gt;</code></div>';
+  document.getElementById('label').value='';document.getElementById('target').value='';
+  load();
+};
 async function load(){
   const r=await fetch('/api/tokens'+q());
   const toks=await r.json();
