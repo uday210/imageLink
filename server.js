@@ -159,8 +159,7 @@ app.get('/i/:id', async (req, res) => {
 </style></head><body>
 <main class="wrap" style="max-width:760px">
   <img class="photo" src="${img}" alt="">
-  <p class="disclose">ℹ️ This is an educational tracking-link demo. Opening it logged standard request
-  metadata (IP, approximate location, device) — the same thing every link you click can do.</p>
+  
 </main>
 <script>
 (function(){
