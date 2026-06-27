@@ -1,0 +1,4 @@
+# Pin the build to Node 20 so better-sqlite3 installs a prebuilt binary
+# (no native compilation / Python needed in the Railway build image).
+[phases.setup]
+nixPkgs = ["nodejs_20"]
